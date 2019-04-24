@@ -48,14 +48,14 @@ contract Election {
         projectCount = 0;
     }
 
-    function addProject(string memory name) public{
+    function addProject(string memory name) public payable {
         require(msg.sender == admin);
         require(appStarted == false); 
         projectCount++;
         projects[projectCount] = Project(projectCount, name, 0, 0);
     }
 
-    function addUser(address secAddress, uint projectId, string memory name) public {
+    function addUser(address secAddress, uint projectId, string memory name) public payable {
         require(msg.sender == admin);
         require(appStarted == false);
         require(projects[projectId].id > 0);
@@ -65,7 +65,7 @@ contract Election {
         candidates[userCount] = Candidate(name, projectId, 0);
     }
 
-    function appStart() public{
+    function appStart() public payable {
         require(msg.sender == admin);
         require(appStarted == false);
         appStarted = true;
