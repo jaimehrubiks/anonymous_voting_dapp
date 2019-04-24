@@ -2,50 +2,73 @@ pragma solidity ^0.5.0;
 
 contract Election {
 
-    // Model a Candidate
+    // Structures
+    struct User {
+        //address secAddress;
+        bool votedProject;
+        bool votedTeammates;
+        uint projectId;
+    }
+
     struct Candidate {
+        // id
+        string name;
+        uint projectId;
+        uint points;
+    }
+
+    struct Project {
+        // id del projecto
         uint id;
         string name;
-        uint voteCount;
+        uint points;
+        uint count; // Number of people in a proyect
     }
 
-    // Read/write candidates
+    // Mappings
+    mapping(address => User) public users;
     mapping(uint => Candidate) public candidates;
-    // Store accounts that have voted
-    mapping(address => bool) public voters;
+    mapping(uint => Project) public projects;
 
-    // Store Candidates Count
-    uint public candidatesCount;
+    // Variables
+    address private admin;
+    bool public appStarted;
+    uint public userCount;
+    uint public projectCount;
 
-    event votedEvent (
-        uint indexed _candidateId
-    );
+    // Events
+    // event votedEvent (
+    //     uint indexed _candidateId
+    // );
 
-    constructor() public {
-        addCandidate("Candidate 1");
-        addCandidate("Candidate 2");
+    constructor(address adminAddress) public {
+        admin = adminAddress;
+        appStarted = false;
+        userCount = 0;
+        projectCount = 0;
     }
 
-    function addCandidate (string memory _name) private {
-        candidatesCount ++;
-        candidates[candidatesCount] = Candidate(candidatesCount, _name, 0);
+    function addProject(string memory name) public{
+        require(msg.sender == admin);
+        require(appStarted == false); 
+        projectCount++;
+        projects[projectCount] = Project(projectCount, name, 0, 0);
     }
 
-    function vote (uint _candidateId) public {
-        // require that they haven't voted before
-        require(!voters[msg.sender]);
+    function addUser(address secAddress, uint projectId, string memory name) public {
+        require(msg.sender == admin);
+        require(appStarted == false);
+        require(projects[projectId].id > 0);
+        projects[projectId].count++;
+        userCount++;
+        users[secAddress] = User(false, false, projectId);
+        candidates[userCount] = Candidate(name, projectId, 0);
+    }
 
-        // require a valid candidate
-        require(_candidateId > 0 && _candidateId <= candidatesCount);
-
-        // record that voter has voted
-        voters[msg.sender] = true;
-
-        // update candidate vote Count
-        candidates[_candidateId].voteCount ++;
-
-        // trigger voted event
-        emit votedEvent(_candidateId);
+    function appStart() public{
+        require(msg.sender == admin);
+        require(appStarted == false);
+        appStarted = true;
     }
 
 }
