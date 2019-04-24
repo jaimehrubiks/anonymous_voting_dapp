@@ -105,6 +105,7 @@ contract Election {
         for (uint i = 0 ; i < votes.length; i++){
             candidates[project.candidates[i]].points+=votes[i];
         }
+        users[msg.sender].votedTeammates = true;
     }
 
 }

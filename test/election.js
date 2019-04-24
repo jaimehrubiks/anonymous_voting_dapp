@@ -111,7 +111,6 @@ contract("Election", function(accounts) {
   it("user jaime (1), tries to vote again", function() {
     return Election.deployed().then(function(instance) {
       electionInstance = instance;
-      console.log(msg.sender);
       return electionInstance.voteProject([0,1], { from: accounts[1] });
     }).then(assert.fail).catch(function(error) {
       return electionInstance.projects(2);
@@ -120,6 +119,23 @@ contract("Election", function(accounts) {
       return electionInstance.users("0x3BB400280Dc3b0761a554c370Bf42BfA5c44Fa70")
     }).then(function(user){
       assert.equal(user.votedProject, true);
+      return 
+    });
+  });
+
+  it("user jaime (1), votes his teammates", function() {
+    return Election.deployed().then(function(instance) {
+      electionInstance = instance;
+      return electionInstance.voteTeammates([2,1],{ from: accounts[1] });
+    }).then(function(res){
+      return electionInstance.users(accounts[1]);
+    }).then(function(user){
+      assert.equal(user.votedTeammates, true)
+      return electionInstance.projects(1);
+    }).then(function(project){
+      return electionInstance.candidates(project.candidates[1]);
+    }).then(function(candidate){
+      assert.equal(candidate.points, 1);
       return 
     });
   });
