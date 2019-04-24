@@ -71,4 +71,20 @@ contract Election {
         appStarted = true;
     }
 
+    function voteProject(uint[] memory votes) public payable {
+        require(appStarted == true);
+        User memory user = users[msg.sender];
+        require(user.projectId > 0);
+        require(user.votedProject == false);
+
+        require(votes.length == projectCount);
+        require(votes[user.projectId-1] == 0);
+        // comprobaciones
+        for(uint i = 0; i < votes.length; i++){
+            projects[i+1].points+=votes[i];
+        }
+
+        user.votedProject = true;
+    }
+
 }
