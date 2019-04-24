@@ -23,6 +23,7 @@ contract Election {
         string name;
         uint points;
         uint count; // Number of people in a proyect
+        uint[] candidates;
     }
 
     // Mappings
@@ -52,7 +53,7 @@ contract Election {
         require(msg.sender == admin);
         require(appStarted == false); 
         projectCount++;
-        projects[projectCount] = Project(projectCount, name, 0, 0);
+        projects[projectCount] = Project(projectCount, name, 0, 0, new uint[](8));
     }
 
     function addUser(address secAddress, uint projectId, string memory name) public payable {
@@ -61,6 +62,7 @@ contract Election {
         require(projects[projectId].id > 0);
         projects[projectId].count++;
         userCount++;
+        projects[projectId].candidates.push(userCount);
         users[secAddress] = User(false, false, projectId);
         candidates[userCount] = Candidate(name, projectId, 0);
     }
@@ -83,8 +85,26 @@ contract Election {
         for(uint i = 0; i < votes.length; i++){
             projects[i+1].points+=votes[i];
         }
+        // user.votedProject = true;
+        users[msg.sender].votedProject = true;
+    }
 
-        user.votedProject = true;
+    function voteTeammates(uint[] memory votes) public payable {
+        require(appStarted == true); 
+        User memory user = users[msg.sender];
+        require(user.projectId > 0);
+        require(user.votedTeammates == false);
+
+        Project memory project = projects[user.projectId];
+        // comprobaciones votes
+        uint suma = 0;
+        for (uint i = 0 ; i < votes.length; i++){
+            suma+=votes[i];
+        }
+        require(suma == (project.count + 1));
+        for (uint i = 0 ; i < votes.length; i++){
+            candidates[project.candidates[i]].points+=votes[i];
+        }
     }
 
 }
