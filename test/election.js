@@ -40,7 +40,7 @@ contract("Election", function(accounts) {
   it("create user", function() {
     return Election.deployed().then(function(instance) {
       electionInstance = instance;
-      return electionInstance.addUser("0x3BB400280Dc3b0761a554c370Bf42BfA5c44Fa70", 1, "jaime", { from: accounts[0] });
+      return electionInstance.addUser(accounts[1], 1, "jaime", { from: accounts[0] });
     }).then(function(res) {
       return electionInstance.userCount();
     }).then(function(count){
@@ -52,7 +52,7 @@ contract("Election", function(accounts) {
   it("create second user", function() {
     return Election.deployed().then(function(instance) {
       electionInstance = instance;
-      return electionInstance.addUser("0x03E576AE8Ea3B170AE91A34581C5a71833a61cda", 1, "salva", { from: accounts[0] });
+      return electionInstance.addUser(accounts[2], 1, "salva", { from: accounts[0] });
     }).then(function(res) {
       return electionInstance.userCount();
     }).then(function(count){
@@ -66,7 +66,7 @@ contract("Election", function(accounts) {
   it("create user when the project does not exist", function() {
     return Election.deployed().then(function(instance) {
       electionInstance = instance;
-      return electionInstance.addUser("0x3BB400280Dc3b0761a554c370Bf42BfA5c44Fa70", 5, "jon snow", { from: accounts[0] });
+      return electionInstance.addUser("0x3BB400280Dc3b0761a554c370Bf42BfA5c54Fa70", 5, "jon snow", { from: accounts[0] });
     }).then(assert.fail).catch(function(error) {
       return electionInstance.userCount();
     }).then(function(count){
@@ -116,7 +116,7 @@ contract("Election", function(accounts) {
       return electionInstance.projects(2);
     }).then(function(project2){
       assert.equal(project2.points, 1)
-      return electionInstance.users("0x3BB400280Dc3b0761a554c370Bf42BfA5c44Fa70")
+      return electionInstance.users(accounts[1])
     }).then(function(user){
       assert.equal(user.votedProject, true);
       return 
@@ -131,13 +131,30 @@ contract("Election", function(accounts) {
       return electionInstance.users(accounts[1]);
     }).then(function(user){
       assert.equal(user.votedTeammates, true)
-      return electionInstance.projects(1);
-    }).then(function(project){
-      return electionInstance.candidates(project.candidates[1]);
-    }).then(function(candidate){
-      assert.equal(candidate.points, 1);
-      return 
+      return electionInstance.candidates(1)
+    }).then(cand=>{
+      assert.equal(cand.points, 2);
+      return electionInstance.candidates(2)
+    }).then(cand=>{
+      assert.equal(cand.points, 1);
+    })
     });
+
+
+    it("user jaime (1), tries to vote twice to his teammates", function() {
+      return Election.deployed().then(function(instance) {
+        electionInstance = instance;
+        return electionInstance.voteTeammates([2,1],{ from: accounts[1] });
+      }).then(assert.fail).catch(function(error) {
+        return electionInstance.candidates(1)
+      }).then(cand=>{
+        assert.equal(cand.points, 2);
+        return electionInstance.candidates(2)
+      }).then(cand=>{
+        assert.equal(cand.points, 1);
+      })
+    });
+
   });
 
 
@@ -233,4 +250,4 @@ contract("Election", function(accounts) {
   //   })
   // });
 
-});
+// });

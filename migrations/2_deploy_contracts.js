@@ -1,5 +1,5 @@
 var Election = artifacts.require("./Election.sol");
 
 module.exports = function(deployer) {
-  deployer.deploy(Election, "0x0A852248141A937DA7221e50CEF4965e3e072a29");
+  deployer.deploy(Election, "0x34893Ea5B16D26E796eD784E50a8084c9F16fCb2");
 };
