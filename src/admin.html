@@ -13,37 +13,32 @@
     <div class="container" style="width: 650px;">
       <div class="row">
         <div class="col-lg-12">
-          <h1 class="text-center">Admin: Add Users</h1>
+          <h1 class="text-center">Voting App: Administrator Page</h1>
           <hr/>
           <br/>
           <div id="loader">
             <p class="text-center">Loading...</p>
+            <p class="text-center">Note that you need to be the admin of the contract to interact with this page</p>
           </div>
           <div id="content" style="display: none;">
-            <h3>Candidates List</h3>
-            <table class="table">
-              <thead>
-                <tr>
-                  <!-- <th scope="col">#</th> -->
-                  <th scope="col">Candidate's Name</th>
-                  <th scope="col">Project</th>
-                  <th scope="col">Votes</th>
-                </tr>
-              </thead>
-              <tbody id="candidatesList">
-              </tbody>
-            </table>
-            <h3>Create new User / Candidate</h3>
+            <h3>Management site: Instructions</h3>
+            <ol>
+              <li>Add all Projects</li>
+              <li>Add all Users</li>
+              <li>Click on start application</li>
+            </ol>
+            <p>Note that participants can not vote until "start application" button has been executed.</p>
+            <p>Also note that once clicked, you can no longer add new participants</p>
+
+            <h3>Manage Projects</h3>
+            <a href="./admin_projects.html"><button>Go</button></a>
+            <h3>Manage Users</h3>
+            <a href="./admin_users.html"><button>Go</button></a>
+            <h3>Application Status</h3>
+            <p id="appStatus">Loading...</p>
+            <h3>Start Application</h3>
             <form onSubmit="App.addUser(); return false;">
-              <div class="form-group">
-                <label for="userName">Name </label><br>
-                <input type="text" id="userName"></input><br>
-                <label for="userAddress">Public Address </label><br>
-                <input type="text" id="userAddress"></input><br>
-                <label for="userProject">Project </label>
-                <select class="form-control" id="userProject"> </select>
-              </div>
-              <button type="submit" class="btn btn-primary">Add Project</button>
+              <button type="submit" class="btn btn-primary">Start App</button>
               <hr />
             </form>
             <hr/>
@@ -60,6 +55,6 @@
     <!-- <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script> -->
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
-    <script src="js/admin_users.js"></script>
+    <script src="js/admin.js"></script>
   </body>
 </html>
