@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Admin: Add Projects</title>
+    <title>Admin: Add Users</title>
 
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -13,7 +13,7 @@
     <div class="container" style="width: 650px;">
       <div class="row">
         <div class="col-lg-12">
-          <h1 class="text-center">Admin: Add Projects</h1>
+          <h1 class="text-center">Admin: Add Users</h1>
           <hr/>
           <br/>
           <div id="loader">
@@ -23,20 +23,23 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th scope="col">#</th>
-                  <th scope="col">Project's Name</th>
+                  <!-- <th scope="col">#</th> -->
+                  <th scope="col">Candidate's Name</th>
+                  <th scope="col">Project</th>
                   <th scope="col">Votes</th>
                 </tr>
               </thead>
-              <tbody id="projectsList">
+              <tbody id="candidatesList">
               </tbody>
             </table>
-            <form onSubmit="App.addProject(); return false;">
+            <form onSubmit="App.addUser(); return false;">
               <div class="form-group">
-                <label for="projectName">Add new Project</label>
-                <input type="text" id="projectName"></input>
-                <!-- <select class="form-control" id="candidatesSelect">
-                </select> -->
+                <label for="userName">Name </label>
+                <input type="text" id="userName"></input><br>
+                <label for="userAddress">Public Address </label>
+                <input type="text" id="userAddress"></input><br>
+                <label for="userProject">Project </label>
+                <select class="form-control" id="userProject"> </select>
               </div>
               <button type="submit" class="btn btn-primary">Add Project</button>
               <hr />
@@ -55,6 +58,6 @@
     <!-- <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script> -->
     <script src="js/web3.min.js"></script>
     <script src="js/truffle-contract.js"></script>
-    <script src="js/admin_projects.js"></script>
+    <script src="js/admin_users.js"></script>
   </body>
 </html>

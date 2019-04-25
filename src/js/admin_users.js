@@ -54,28 +54,58 @@ App = {
   render: async function() {
     App.displayContent(false);
     App.displayAccount(); // async
-    await App.renderProjectsList();
+    await App.renderCandidateList();
     App.displayContent(true);
   },
 
-  renderProjectsList: async function() {
-    // instance = await App.contracts.Election.at("0xa53c38a560C22e2Cc8c1D79De334e4897E1626e1");
-    instance = await App.contracts.Election.deployed();
-    projectCount = await instance.projectCount();
-    var candidatesResults = $("#projectsList");
-    candidatesResults.empty();
+  renderCandidateList: async function(){
 
-    for (var i = 1; i <= projectCount; i++) {
-      project = await instance.projects(i);
-      var id = project[0];
-      var name = project[1];
-      var voteCount = project[2];
+    let instance = await App.contracts.Election.deployed();
+    let candidatesCount = await instance.userCount();
 
-      var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
-      candidatesResults.append(candidateTemplate);
+    let projects = await App.getProjects(instance);
 
+    let candidateList = $("#candidatesList");
+    candidateList.empty();
+
+    for (var i = 1; i <= candidatesCount; i++){
+      candidate = await instance.candidates(i);
+      var candidateRow = `<tr><th>${candidate[0]}</th><td>${projects[candidate[1]-1][1]}</td><td>${candidate[2]}</td>`;
+      candidateList.append(candidateRow);
     }
+
+    var userProjectSelector = $('#userProject');
+    userProjectSelector.empty();
+
+    for (var i = 0; i < projects.length; i++){
+      let project = projects[i];
+      let projectOption = `<option value='${i+1}'>${project[1]}</option>`
+      userProjectSelector.append(projectOption);
+    }
+
   },
+
+  getProjects: async function(instance) {
+    let projectsCount = await instance.projectCount();
+    let projects = [];
+
+    for (let i = 1; i<= projectsCount; i++){
+      let project = await instance.projects(i);
+      projects.push(project);
+    }
+    return projects;
+  },
+
+  addUser: async function() {
+
+    let instance = await App.contracts.Election.deployed();
+    let userName = $("#userName").val();
+    let userAddress = $("#userAddress").val();
+    let userProject = $("#userProject").val();
+    await instance.addUser(userAddress, userProject, userName, { from: App.account });
+
+  },
+
 
   displayAccount: function(){
     // Load account data
@@ -85,15 +115,6 @@ App = {
         $("#accountAddress").html("Your Account: " + account);
       }
     });
-  },
-
-  addProject: async function() {
-    var projectName = $('#projectName').val();
-    instance = await App.contracts.Election.deployed();
-    try{
-      await instance.addProject(projectName, { from: App.account });
-      // Hide till event?
-    } catch(err){ console.log(err); }
   },
 
   // listenForEvents: function() {
