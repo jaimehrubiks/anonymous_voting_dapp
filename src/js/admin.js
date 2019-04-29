@@ -68,10 +68,10 @@ App = {
     App.displayContent(true);
   },
 
-  addUser: async function() {
+  staart: async function() {
 
     let instance = await App.contracts.Election.deployed();
-    await instance.appStart();
+    await instance.appStart({from: App.account});
 
   },
 

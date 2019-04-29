@@ -91,7 +91,8 @@ App = {
     var projectName = $('#projectName').val();
     instance = await App.contracts.Election.deployed();
     try{
-      await instance.addProject(projectName, { from: App.account });
+      // await instance.addProject(projectName, { from: App.account });
+      await instance.addProject(projectName);
       // Hide till event?
     } catch(err){ console.log(err); }
   },

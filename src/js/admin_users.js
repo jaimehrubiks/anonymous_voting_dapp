@@ -68,11 +68,12 @@ App = {
     let candidateList = $("#candidatesList");
     candidateList.empty();
 
-    for (var i = 1; i <= candidatesCount; i++){
-      candidate = await instance.candidates(i);
-      var candidateRow = `<tr><th>${candidate[0]}</th><td>${projects[candidate[1]-1][1]}</td><td>${candidate[2]}</td>`;
-      candidateList.append(candidateRow);
-    }
+    // for (var i = 1; i <= candidatesCount; i++){
+    //   candidateAddress = await instance.candidatesList(i);
+    //   candidate = await instance.candidates(candidateAddress);
+    //   var candidateRow = `<tr><th>${candidate[0]}</th><td>${projects[candidate[1]-1][1]}</td><td>${candidate[2]}</td>`;
+    //   candidateList.append(candidateRow);
+    // }
 
     var userProjectSelector = $('#userProject');
     userProjectSelector.empty();
@@ -81,6 +82,13 @@ App = {
       let project = projects[i];
       let projectOption = `<option value='${i+1}'>${project[1]}</option>`
       userProjectSelector.append(projectOption);
+      for (var j = 1; j <= project[3] ; j++){
+        // candidateAddress = await instance.projects(i+1).candidates(j);
+        candidateAddress = await instance.getProjectCandidate(i+1,j);
+        candidate = await instance.candidates(candidateAddress[0]);
+        var candidateRow = `<tr><th>${candidate[0]}</th><td>${projects[candidate[1]-1][1]}</td><td>${candidate[4]}</td><td>${candidate[2]?'Yes':'No'}</td><td>${candidate[3]?'Yes':'No'}</td>`;
+        candidateList.append(candidateRow);
+      }
     }
 
   },

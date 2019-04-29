@@ -67,13 +67,14 @@ App = {
         });
 
         let instance = await App.contracts.Election.deployed();
-        let user = await instance.users(App.account);
-        let projectId = user[2];
+        let user = await instance.candidates(App.account);
+        let projectId = user[1];
         App.projectId = projectId;
         let project = await instance.projects(projectId);
         let projectName = project[1];
 
-        $("#userinfo #username").html("<span style=\"color:red;\">Not supported</span>");
+        // $("#userinfo #username").html("<span style=\"color:red;\">Not supported</span>");
+        $("#userinfo #username").html(user[0]);
         $("#userinfo #userTeam").html(projectName);
     },
 
@@ -83,8 +84,8 @@ App = {
 
         if (appStarted) {
             let numProjects = await instance.projectCount();
-            let user = await instance.users(App.account);
-            let hasVoted = user[0];
+            let user = await instance.candidates(App.account);
+            let hasVoted = user[2];
 
             let rankingResults = $("#rankingResults")
             rankingResults.empty();

@@ -26,6 +26,7 @@ contract Election {
     // Mappings
     mapping(address => Candidate) public candidates;
     mapping(uint => Project) public projects;
+    //mapping(uint => address) public candidatesList;
 
     // Variables
     uint8 private NUM_QUESTION = 4;
@@ -56,6 +57,7 @@ contract Election {
         require(projects[projectId].id > 0);
         projects[projectId].count++;
         userCount++;
+        //candidatesList[userCount] = secAddress;
         projects[projectId].candidates[projects[projectId].count]=secAddress;
         candidates[secAddress] = Candidate(name, projectId, false, false, 0);
     }
@@ -64,6 +66,10 @@ contract Election {
         require(msg.sender == admin);
         require(appStarted == false);
         appStarted = true;
+    }
+
+    function getProjectCandidate(uint projectId, uint candidateNum) external view returns (address){
+        return projects[projectId].candidates[candidateNum];
     }
 
     function getQuestionPoints(uint projectId) external view returns (uint, uint, uint, uint) { 
